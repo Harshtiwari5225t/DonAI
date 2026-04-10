@@ -1,66 +1,62 @@
-import pandas as pd
 
 from flask import Flask, request, jsonify, send_from_directory
 import pyjokes
-df=pd.read_csv("airlines_flights_data.csv")
+import wikipedia
 
 app=Flask(__name__, static_folder='.', static_url_path='')
 
+
+
+
+
+def search_for_meaning(word_query):
+    word = word_query.replace("meaning of", "").replace("search for", "").replace("what is", "").strip()
+    if not word:
+        return "Please specify a word you want the meaning for."
+        
+    try:
+        summary = wikipedia.summary(word, sentences=3)
+        return summary
+    except wikipedia.exceptions.DisambiguationError as e:
+        # Handle cases where the search term is ambiguous (multiple options)
+        return f"There are multiple results for {word}. Could you be more specific?"
+    except wikipedia.exceptions.PageError:
+        return f"Sorry, I couldn't find a clear definition for {word} on Wikipedia."
+    except Exception as e:
+        return f"An error occurred during the search: {e}"
 
 def Dora(user_input):
     
         query=user_input.lower()
     
         if "bye" in query:
-            return "Dora: Dora ra Dora ra"
+            return "Dora:Good Bye!! Have a nice day"
         elif "joke" in query:
             return pyjokes.get_joke()
         elif "dora" in query or "hi" in query:
-            return "Dora: Kya hua nobita"
-
+            return "Dora: Yes BOSS!! Tell me what to do"
         elif "name" in query:
-            return "Dora: Doraemon hu yaar"
-         
-        
+            return "Dora: Dora, A ChatBot knows as DonAI named Dora"
+        elif "what" in query or "who" in query or "what" in query:
+            return "Dora: "+search_for_meaning(query)
         elif "help" in query:
-            return "Dora: Gian ne fir mara kya?? AA gya fir se pit ke!!!"
+            return "Dora: Tell me what is the problem"
 
         elif "flight" in query  or "book" in query  :
             return "Dora: Sure! can you please please tell me whether you want a domestic or international flight?"
 
-            
-
         elif "domestic" in query or "dome" in query:
             return "Dora: Enter your Source and Destination"
-
-                # Source=input("Dora: Enter the Nearest airport or the source airport: ").capitalize()
-                # dest=input("Dora: Enter the Destination: ").capitalize
-                # clas=input("Dora: Enter the class? economy or bussiness  :  ").capitalize()
-
-                # if clas!="Economy":
-                #     print("Dora: Sorry!!! We cant help you")
-                #     return "Sorry we cant do it"
-
-                # #day=input("Enter the days left for flight booking:  ")
-                # stop=input("Dora: Enter the minimum stops you can take during flight? zero or one or two like that:  ").lower()
-               
-                # arrival=input("Dora:Enter the arrival time? Evening or Night or Morning or Early_Morning:  ").capitalize()
-                
-                # filter_df=df.query('source_city==@Source & destination_city==@dest  & stops==@stop & arrival_time==@arrival')
-
-                # print(filter_df)
-                
-                # print()
-                # print("Dora: This is the list of available flights suitable for you!!")
-
+        elif "from" in query:
+            return "LOL !! Fool I can only have a chat with you"
         elif "inter" in query or "international" in query:
             return "Dora: Sorry I cant help you with international flight booking"
         elif "gadget" in query:
             return "dukkan thodi khol rakhi hai meine!!! bada aaya shizuka ko impress krne wala>>"
         else:
-            return "Dora: ye kya bakk rhe ho!!!"
+            return "Dora: Can't understand what are you asking!!!"
 
-# DoraFlight() 
+
 
 
 @app.route("/")
