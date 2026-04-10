@@ -71,8 +71,5 @@ def chat():
     
     return jsonify({"response": response})
 
-if __name__=="__main__":
-    print("Doraemon is running!! Visit http://127.0.0.1:5500/DonAI.html  in your browser")
-    print("Serving DonAI.html file")
-    app.run(debug=True)
-
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
